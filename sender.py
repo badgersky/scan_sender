@@ -1,8 +1,10 @@
 import os
 import pathlib as pl
+import smtplib
+from email.message import EmailMessage
 
-from PyPDF2 import PdfWriter, PdfFileReader
-
+from PyPDF2 import PdfWriter
+from settings import *
 
 class Sender:
 
@@ -27,8 +29,28 @@ class Sender:
 
         return os.path.join(self.dir_path, "output.pdf")
 
+    def send_file(self):
+        file = self.merge_files()
+        msg = EmailMessage()
+
+        msg['to'] = sender
+        msg['from'] = sender
+        msg['subject'] = 'protocol'
+
+        with open(file, "rb") as pdf:
+            pdf_data = pdf.read()
+        msg.add_attachment(pdf_data, maintype="document", subtype="pdf", filename="protocol.pdf")
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender, passwd)
+
+        server.send_message(msg)
+        server.quit()
+
+
 if __name__ == '__main__':
     p = pl.Path(os.getcwd())
     path = os.path.join(p.home(), 'Pictures', 'Scans')
     s = Sender(path)
-    s.merge_files()
+    s.send_file()
