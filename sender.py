@@ -24,10 +24,10 @@ class Sender:
                 merger.append(page)
             os.remove(f)
 
-        with open(os.path.join(self.dir_path, "output.pdf"), "wb") as output:
+        with open(os.path.join(self.dir_path, "protocol.pdf"), "wb") as output:
             merger.write(output)
 
-        return os.path.join(self.dir_path, "output.pdf")
+        return os.path.join(self.dir_path, "protocol.pdf")
 
     def send_file(self):
         file = self.merge_files()
