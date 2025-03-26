@@ -33,13 +33,14 @@ class Sender:
         file = self.merge_files()
         msg = EmailMessage()
 
-        msg['to'] = sender
+        msg['to'] = receiver
         msg['from'] = sender
         msg['subject'] = 'protocol'
 
         with open(file, "rb") as pdf:
             pdf_data = pdf.read()
         msg.add_attachment(pdf_data, maintype="document", subtype="pdf", filename="protocol.pdf")
+        os.remove(file)
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
