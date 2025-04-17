@@ -31,7 +31,7 @@ class Sender:
                 pages = convert_from_path(f, 600, poppler_path=poppler)
                 new_filename = self.get_title(pages)
                 if new_filename:
-                    filename = new_filename
+                    filename = new_filename + ".pdf"
             with open(f, "rb") as page:
                 merger.append(page)
             os.remove(f)
@@ -82,7 +82,7 @@ class Sender:
                 filename = line.replace(" ", "_")
                 filename = filename.replace("/", "-")
 
-        return filename + ".pdf"
+        return filename
 
 
 if __name__ == '__main__':
