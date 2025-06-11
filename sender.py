@@ -2,11 +2,8 @@ import os
 import pathlib as pl
 import smtplib
 from email.message import EmailMessage
-from string import ascii_letters, digits, punctuation
 
 from PyPDF2 import PdfWriter
-from pdf2image import convert_from_path
-import pytesseract as pt
 
 from settings import *
 
@@ -24,14 +21,9 @@ class Sender:
     def merge_files(self):
         files = self.get_file_list()
         merger = PdfWriter()
-        filename = "protocol.pdf"
+        filename = input("protocol name: ")
 
-        for i, f in enumerate(files):
-            if i == 0:
-                pages = convert_from_path(f, 600, poppler_path=poppler)
-                new_filename = self.get_title(pages)
-                if new_filename:
-                    filename = new_filename + ".pdf"
+        for f in files:
             with open(f, "rb") as page:
                 merger.append(page)
             os.remove(f)
@@ -61,28 +53,7 @@ class Sender:
         server.send_message(msg)
         server.quit()
         os.remove(file)
-
-    @staticmethod
-    def get_title(pages):
-        text = ""
-        filename = ""
-        chars = ascii_letters + digits + punctuation + " "
-        pt.pytesseract.tesseract_cmd = tesseract
-
-        for page in pages:
-            text += pt.image_to_string(page)
-
-        text = text.split("\n")
-        for line in text:
-            if "protokol" in line.lower():
-                for char in line:
-                    if char not in chars:
-                        line = line.replace(char, "")
-                line = line.strip()
-                filename = line.replace(" ", "_")
-                filename = filename.replace("/", "-")
-
-        return filename
+        print("file sent")
 
 
 if __name__ == '__main__':
