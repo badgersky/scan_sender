@@ -25,6 +25,8 @@ class Sender:
 
         if not filename:
             filename = "protocol.pdf"
+        else:
+            filename += ".pdf"
 
         for f in files:
             with open(f, "rb") as page:
@@ -38,16 +40,21 @@ class Sender:
 
     def send_file(self):
         file = self.merge_files()
-        path = pathlib.PurePath(file)
+        filepath = pl.PurePath(file)
         msg = EmailMessage()
 
-        msg['to'] = receiver
-        msg['from'] = sender
-        msg['subject'] = path.name
+        receiver = input("select receiver (1/2): ")
 
-        with open(path, "rb") as pdf:
+        if receiver == "1" or not receiver:
+            msg['to'] = receiver1
+        elif receiver == "2":
+            msg['to'] = receiver2
+        msg['from'] = sender
+        msg['subject'] = filepath.name
+
+        with open(filepath, "rb") as pdf:
             pdf_data = pdf.read()
-        msg.add_attachment(pdf_data, maintype="document", subtype="pdf", filename=path.name)
+        msg.add_attachment(pdf_data, maintype="document", subtype="pdf", filename=filepath.name)
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
