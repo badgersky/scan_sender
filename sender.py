@@ -23,6 +23,9 @@ class Sender:
         merger = PdfWriter()
         filename = input("protocol name: ")
 
+        if not filename:
+            filename = "protocol.pdf"
+
         for f in files:
             with open(f, "rb") as page:
                 merger.append(page)
